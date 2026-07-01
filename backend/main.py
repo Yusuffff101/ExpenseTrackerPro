@@ -1,4 +1,5 @@
 import secrets
+import os
 from datetime import date, datetime, timedelta
 
 from fastapi import FastAPI, Query
@@ -24,7 +25,7 @@ import bcrypt
 from session import SessionLocal
 from models import Budget, Category, Expense, RecurringTransaction, User
 from fastapi import HTTPException
-from sqlalchemy import asc, desc, func, or_, select
+from sqlalchemy import asc, desc, func, or_, select, text
 
 from auth import create_access_token
 from fastapi.security import OAuth2PasswordBearer
@@ -45,13 +46,14 @@ DEFAULT_CATEGORIES = [
     ("Other", "#64748b"),
 ]
 
-origins = [
-    "http://localhost:5173",
-]
+origins = [origin.strip().rstrip("/") for origin in os.getenv(
+    "FRONTEND_URLS", "http://localhost:5173,http://127.0.0.1:5173"
+).split(",") if origin.strip()]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
+    allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX") or None,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -61,6 +63,13 @@ app.add_middleware(
 @app.get("/")
 def root():
     return {"message": "Expense Tracker API is running!"}
+
+
+@app.get("/health")
+async def health():
+    async with SessionLocal() as session:
+        await session.execute(text("SELECT 1"))
+    return {"status": "healthy"}
 
 
 @app.post("/register")
