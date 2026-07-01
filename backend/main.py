@@ -1,9 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+
 from schemas import (
     RegisterRequest,
     LoginRequest,
-    ExpenseCreate
+    ExpenseCreate,
+    ExpenseUpdate
 )
 
 from fastapi import Depends
@@ -192,3 +194,63 @@ async def get_expenses(
         expenses = result.scalars().all()
 
         return expenses
+    
+@app.put("/expenses/{expense_id}")
+async def update_expense(
+    expense_id: int,
+    data: ExpenseUpdate,
+    current_user: User = Depends(get_current_user)
+):
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(Expense).where(
+                Expense.id == expense_id,
+                Expense.user_id == current_user.id
+            )
+        )
+
+        expense = result.scalar_one_or_none()
+
+        if expense is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Expense not found"
+            )
+
+        expense.description = data.description
+        expense.amount = data.amount
+        expense.category = data.category
+
+        await session.commit()
+
+        return {
+            "message": "Expense updated successfully!"
+        }
+    
+@app.delete("/expenses/{expense_id}")
+async def delete_expense(
+    expense_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    async with SessionLocal() as session:
+        result = await session.execute(
+            select(Expense).where(
+                Expense.id == expense_id,
+                Expense.user_id == current_user.id
+            )
+        )
+
+        expense = result.scalar_one_or_none()
+
+        if expense is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Expense not found"
+            )
+
+        await session.delete(expense)
+        await session.commit()
+
+        return {
+            "message": "Expense deleted successfully!"
+        }

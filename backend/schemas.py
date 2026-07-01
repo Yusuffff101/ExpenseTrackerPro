@@ -15,3 +15,8 @@ class ExpenseCreate(BaseModel):
     description: str
     amount: float
     category: str
+
+class ExpenseUpdate(BaseModel):
+    description: str
+    amount: float
+    category: str
