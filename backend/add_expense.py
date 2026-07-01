@@ -15,10 +15,11 @@ SessionLocal = sessionmaker(
 async def add_expense():
     async with SessionLocal() as session:
         expense = Expense(
-            amount=250,
-            description="Lunch",
-            category="Food"
-        )
+        user_id=2,
+        amount=250,
+        description="Lunch",
+        category="Food"
+    )
 
         session.add(expense)
         await session.commit()
