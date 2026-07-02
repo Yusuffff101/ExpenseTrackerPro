@@ -2,7 +2,7 @@ import axios from "axios";
 export const TOKEN_KEY = "expense-tracker-token";
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL ?? "https://expensetrackerpro-dn3l.onrender.com",
+  baseURL: import.meta.env.VITE_API_URL ?? "https://expensetrackerpro-10.onrender.com",
   headers: { "Content-Type": "application/json" },
 });
 
