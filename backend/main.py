@@ -25,7 +25,7 @@ import bcrypt
 from session import SessionLocal
 from models import Budget, Category, Expense, RecurringTransaction, User
 from fastapi import HTTPException
-from sqlalchemy import asc, desc, func, or_, select, text
+from sqlalchemy import asc, desc, extract, func, or_, select, text
 
 from auth import create_access_token
 from fastapi.security import OAuth2PasswordBearer

@@ -1,7 +1,10 @@
 from datetime import datetime, timedelta
 import os
 
+from dotenv import load_dotenv
 from jose import jwt
+
+load_dotenv()
 
 SECRET_KEY = os.getenv("SECRET_KEY", "local-development-only-change-me")
 ALGORITHM = "HS256"

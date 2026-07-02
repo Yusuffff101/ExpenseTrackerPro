@@ -2,11 +2,14 @@ import os
 import re
 from datetime import date, datetime, timedelta
 
+from dotenv import load_dotenv
 from sqlalchemy import desc, extract, func, select
 from telegram import Bot, Update
 
 from models import Budget, Expense, User
 from session import SessionLocal
+
+load_dotenv()
 
 
 AMOUNT_PATTERN = re.compile(r"(?:spent|paid)?\s*(?:₹|rs\.?\s*)?(\d+(?:\.\d{1,2})?)\s+(?:on\s+)?(.+)", re.I)

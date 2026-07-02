@@ -1,7 +1,10 @@
 import os
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
+from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import create_async_engine
+
+load_dotenv()
 
 raw_database_url = os.getenv(
     "DATABASE_URL", 
