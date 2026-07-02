@@ -52,7 +52,7 @@ origins = [origin.strip().rstrip("/") for origin in os.getenv(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],
     allow_origin_regex=os.getenv("CORS_ORIGIN_REGEX") or None,
     allow_credentials=True,
     allow_methods=["*"],
